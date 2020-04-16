@@ -171,19 +171,21 @@ void Tree::display(Tree* root)
 }
 void Tree::remove(string name)
 {
+    message = "already removed";
     if(this->name == name)
     {
-        if(this->Mother != NULL)remove(&(this->Mother));
-        if(this->Father != NULL)remove(&(this->Father));
-        this->name.clear();
+        message = "cant remove root!";
+        throw myException();
     }
     else 
     {
-        if(this->Mother != NULL)remove(&(this->Mother), name);
-        if(this->Father != NULL)remove(&(this->Father), name);
+        bool a = false, b = false;
+        if(this->Mother != NULL)a = remove(&(this->Mother), name);
+        if(this->Father != NULL)b = remove(&(this->Father), name);
+        if(!b && !a)throw myException();
     }
 }
-void Tree::remove(Tree** root, string name)
+bool Tree::remove(Tree** root, string name)
 {
     if((*root)->name == name)
     {
@@ -191,13 +193,15 @@ void Tree::remove(Tree** root, string name)
         if((*root)->Father != NULL)remove(&(*root)->Father);
         delete *root;
         *root = NULL;
-        if(root== NULL )cout<<"1234\n";
-        
+        return true;
     }
     else
     {
-        if((*root)->Mother != NULL)remove(&(*root)->Mother, name);
-        if((*root)->Father != NULL)remove(&(*root)->Father, name);
+
+        if((*root)->Mother != NULL && (*root)->Father != NULL)return remove(&(*root)->Mother, name) || remove(&(*root)->Father, name);
+        if((*root)->Father != NULL)return remove(&(*root)->Father, name);
+        if((*root)->Mother != NULL)return remove(&(*root)->Mother, name);
+        return false;
     }
     
 }

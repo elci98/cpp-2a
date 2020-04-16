@@ -27,7 +27,7 @@ namespace family
         string find(Tree* root, string relation);
         void display(Tree* root);
         void remove(Tree** root);
-        void remove(Tree** root, string name);
+        bool remove(Tree** root, string name);
     };
 
 };
